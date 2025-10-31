@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profit</title>
+    <title>$$$</title>
     <style>
         html,
         body {
@@ -181,9 +181,10 @@
 
 <body>
     <div id="main">
-        <h2 style="padding:0;margin:0;margin-bottom: 1rem;">Simple Online <sub><small>SlightlyAddictive</small></sub> Slotted Profit Device</h2>
-        <div style="margin-bottom: 0.5rem;"><label>Bet Amount: $</label><input type="number" min="1" step="1" max="10000" value="1" maxlength="3"
-            minlength="1" placeholder="10"></div>
+        <h2 style="padding:0;margin:0;margin-bottom: 1rem;">Simple Online <sub><small>SlightlyAddictive</small></sub>
+            Slotted Profit Device</h2>
+        <div style="margin-bottom: 0.5rem;"><label>Bet Amount: $</label><input type="number" min="1" step="1"
+                max="10000" value="1" maxlength="3" minlength="1" placeholder="10"></div>
         <div id="slotwrap">
         </div>
         <h2 id="out">(click the button!)</h2>
@@ -192,7 +193,7 @@
     </div>
     <script>
         const urlParams = new URLSearchParams(location.search);
-        const slotCount = Math.min(100, Math.max(1, parseInt(urlParams.get("n")))) || 7;
+        const slotCount = Math.min(1000, Math.max(1, parseInt(urlParams.get("n")))) || 7;
         const betAmount = Math.max(1, Math.min(10000, parseInt(urlParams.get("bt")))) || 1;
         const delayMult = Math.max(0, Math.min(16, parseFloat(urlParams.get("d")))) || 1;
         if (urlParams.has("bt")) {
@@ -219,8 +220,13 @@
             x.play();
         }
         const titl = document.querySelector("title");
+        let t = 0;
+        const emojis = ["💵", "💰", "👑", "💼", "💸", "💴", "💶", "🤑"];
+        const titles = ["💵💰👑💼", "Profit", "99% QUIT BEFORE THEY WIN BIG", "💰AROUND THE CORNER"];
         setInterval(() => {
-            titl.innerText = titl.innerText === "$$$" ? "Profit" : "$$$";
+            titl.innerText = titles[t];
+            t++;
+            t %= titles.length;
         }, 500);
         const multipliers = [];
         for (let i = 0; i < 3; i++) {
@@ -273,12 +279,12 @@
             const betAmount = Math.max(1, Math.min(10000, parseInt(inputBox.value))) || 1;
             document.body.style.cursor = "wait";
             document.querySelector("#out").innerText = "1x | +$0";
-            slots.forEach(x => { x.innerText = "?"; x.setAttribute("style", `--col: black`); });
+            slots.forEach(x => { x.innerText = emojis[Math.floor(Math.random() * emojis.length)]; x.setAttribute("style", `--col: black`); });
             btn.setAttribute("disabled", "true");
             let mult = 1;
             const values = (new Array(slots.length)).fill(1);
             // localStorage.getItem("sjfahew") for beginners luck algorithm
-            const set = true ? multipliers : multipliers.filter(x => (x.mult > 0.9) && (x.mult < 4)); //
+            const set = true ? [...multipliers] : [...multipliers.filter(x => (x.mult > 0.9) && (x.mult < 4))]; //
             values.forEach((x, i) => {
                 values[i] = set[Math.floor(set.length * Math.random())];
             });
@@ -292,12 +298,20 @@
                     mult *= multVal.mult;
                     document.querySelector("#out").innerText = Math.round((mult) * 100) / 100 + "x | " + (((mult) < 0) ? "-" : "+") + "$" + (betAmount * Math.abs(Math.round((mult) * 100) / 100)).toFixed(2);
                     slot.classList.add("bob");
-                    if (multVal.mult >= 1) {
+                    if (multVal.mult > 1) {
                         playSound(hits[Math.min(3, hitCounter)]);
                         hitCounter++;
-                    } else {
+                    } else if (multVal.mult < 1) {
                         hitCounter = 0;
                         playSound(miss);
+                    } else {
+                        if (mult < 1 && (values[i - 1]?.mult <= 1)) {
+                            hitCounter = 0;
+                            playSound(miss);
+                        } else {
+                            playSound(hits[Math.min(3, hitCounter)]);
+                            hitCounter++;
+                        }
                     }
                     setTimeout(() => { slot.classList.remove("bob"); }, 500);
                     if (i === (slots.length - 1)) {
