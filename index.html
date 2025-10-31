@@ -22,7 +22,7 @@
             width: calc(100vw - 60px - 4rem);
             height: calc(100vh - 60px - 4rem);
             border-radius: 15px;
-            overflow: hidden;
+            overflow-x: hidden;
             transform: translate(30px, 30px);
             padding: 2rem;
             font-family: sans-serif;
@@ -184,20 +184,21 @@
         <h2 style="padding:0;margin:0;margin-bottom: 1rem;">Simple Online <sub><small>SlightlyAddictive</small></sub> Slotted Profit Device</h2>
         <div style="margin-bottom: 0.5rem;"><label>Bet Amount: $</label><input type="number" min="1" step="1" max="10000" value="1" maxlength="3"
             minlength="1" placeholder="10"></div>
-        <div>
-            <span class="slot" style="">2x</span>
-            <span class="slot" style="">0.5x</span>
-            <span class="slot" style="">3x</span>
-            <span class="slot" style="">0x</span>
-            <span class="slot" style="">2x</span>
-            <span class="slot" style="">0.5x</span>
-            <span class="slot" style="">0.5x</span>
+        <div id="slotwrap">
         </div>
         <h2 id="out">(click the button!)</h2>
         <br>
         <img src="Button.png" id="btn" draggable="false">
     </div>
     <script>
+        const urlParams = new URLSearchParams(location.search);
+        const slotCount = Math.min(100, Math.max(1, parseInt(urlParams.get("n")))) || 7;
+        const wrapper = document.querySelector("#slotwrap");
+        for (let i = 0; i < slotCount; i++) {
+            const slot = document.createElement("span");
+            slot.classList.add("slot");
+            wrapper.appendChild(slot);
+        }
         let hitCounter = 0;
         const hits = [
             new Audio("a.wav"),
@@ -247,7 +248,7 @@
             inputBox.value = Math.max(1, Math.min(10000, parseInt(inputBox.value))) || 1;
         });
 
-        const SAMPLES = 1; //100000;
+        const SAMPLES = 100; //100000;
         let experimentalSum = 0;
         for (let i = 0; i < SAMPLES; i++) {
             let m = 1;
@@ -270,8 +271,8 @@
             btn.setAttribute("disabled", "true");
             let mult = 1;
             const values = (new Array(slots.length)).fill(1);
-            const set = localStorage.getItem("sjfahew") ? multipliers : multipliers.filter(x => (x.mult > 0.9) && (x.mult < 4)); //
-            console.log(set);
+            // localStorage.getItem("sjfahew") for beginners luck algorithm
+            const set = true ? multipliers : multipliers.filter(x => (x.mult > 0.9) && (x.mult < 4)); //
             values.forEach((x, i) => {
                 values[i] = set[Math.floor(set.length * Math.random())];
             });
@@ -283,7 +284,7 @@
                     slot.setAttribute("style", `--col: ${multVal.color}`);
                     slot.innerText = multVal.mult + "x";
                     mult *= multVal.mult;
-                    document.querySelector("#out").innerText = Math.round((mult) * 100) / 100 + "x | " + (((mult - 1) < 0) ? "-" : "+") + "$" + (betAmount * Math.abs(Math.round((mult - 1) * 100) / 100)).toFixed(2);
+                    document.querySelector("#out").innerText = Math.round((mult) * 100) / 100 + "x | " + (((mult) < 0) ? "-" : "+") + "$" + (betAmount * Math.abs(Math.round((mult) * 100) / 100)).toFixed(2);
                     slot.classList.add("bob");
                     if (multVal.mult >= 1) {
                         playSound(hits[Math.min(3, hitCounter)]);
@@ -304,7 +305,7 @@
         });
     </script>
     <a id="disclaimer"
-        href="javascript:alert('gamble responsibly and set a gambling budget before playing')">(disclaimer)</a>
+        href="javascript:alert('gamble responsibly and set a gambling budget before playing.\n\nyour winnings may be rounded to the nearest 10 cents.')">(disclaimer)</a>
 </body>
 
 </html>
