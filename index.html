@@ -193,6 +193,12 @@
     <script>
         const urlParams = new URLSearchParams(location.search);
         const slotCount = Math.min(100, Math.max(1, parseInt(urlParams.get("n")))) || 7;
+        const betAmount = Math.max(1, Math.min(10000, parseInt(urlParams.get("bt")))) || 1;
+        const delayMult = Math.max(1, Math.min(8, parseInt(urlParams.get("d")))) || 1;
+        if (urlParams.has("bt")) {
+            document.querySelector("input").value = betAmount;
+            document.querySelector("input").disabled = true;
+        }
         const wrapper = document.querySelector("#slotwrap");
         for (let i = 0; i < slotCount; i++) {
             const slot = document.createElement("span");
@@ -299,7 +305,7 @@
                         document.body.style.cursor = "auto";
                         hitCounter = 0;
                     }
-                }, ((betAmount > 99) ? 500 : ((betAmount > 9) ? 250 : 125)) * (i + 1));
+                }, ((betAmount > 99) ? 500 : ((betAmount > 9) ? 250 : 125)) * (i + 1) * delayMult);
                 playSound(theme);
             });
         });
