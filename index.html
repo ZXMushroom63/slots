@@ -241,7 +241,7 @@
     </div>
     <script>
         const urlParams = new URLSearchParams(location.search);
-        const slotCount = Math.min(1000, Math.max(1, parseInt(urlParams.get("n")))) || 7;
+        const slotCount = Math.min(1000, Math.max(1, parseInt(urlParams.get("n")))) || 2;
         const betAmount = Math.max(1, Math.min(10000, parseInt(urlParams.get("bt")))) || 1;
         const delayMult = Math.max(0, Math.min(16, parseFloat(urlParams.get("d")))) || 1;
         const dbl_wrapper = document.querySelector("#dbl_wrapper");
