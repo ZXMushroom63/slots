@@ -374,7 +374,7 @@
                     if (i === (slots.length - 1)) {
                         btn.setAttribute("disabled", "false");
                         document.body.style.cursor = "auto";
-                        if (mult > 1) {
+                        if (mult >= 1) {
                             dbl_wrapper.style.display = "inline";
                             dbl.classList.remove("running");
                             dbl.style.pointerEvents = "all";
@@ -382,8 +382,11 @@
                                 mult *= (Math.random() < 0.5) ? 0 : 2;
                                 if (mult) {
                                     dbl.innerText = "DOUBLE!";
+                                    playSound(hits[0]);
+                                    playSound(hits[2]);
                                 } else {
                                     dbl.innerText = "NOTHING!";
+                                    playSound(miss);
                                 }
                                 document.querySelector("#out").innerText = Math.round((mult) * 100) / 100 + "x | " + (((mult) < 0) ? "-" : "+") + "$" + (betAmount * Math.abs(Math.round((mult) * 100) / 100)).toFixed(2);
                                 dbl.classList.add("running");

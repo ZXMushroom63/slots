@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>table of possibilities</title>
+  </head>
+  <body>
+    <table></table>
+    <style>
+      html,
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      tr {
+      }
+      td {
+        border: 1px solid black;
+        font-family: monospace;
+        font-size: 0.5rem;
+        padding: 0.5px;
+        margin: 0;
+      }
+      tr.t3 td {
+        border-bottom: 3px solid black;
+      }
+    </style>
+    <script>
+      const T = document.querySelector("table");
+      const multipliers = [];
+      const SLOTS_MULT = 1;
+      for (let i = 0; i < 3 * SLOTS_MULT; i++) {
+        multipliers.push({ mult: 0, color: "black" });
+      }
+      for (let i = 0; i < 45 * SLOTS_MULT; i++) {
+        multipliers.push({ mult: 0.5, color: "#39006c" });
+      }
+      for (let i = 0; i < 23 * SLOTS_MULT; i++) {
+        multipliers.push({ mult: 1, color: "#007bff" });
+      }
+      for (let i = 0; i < 5 * SLOTS_MULT; i++) {
+        multipliers.push({ mult: 2, color: "#ff003f" });
+      }
+      for (let i = 0; i < 4 * SLOTS_MULT; i++) {
+        multipliers.push({ mult: 3, color: "#fc03e8" });
+      }
+      for (let i = 0; i < 3 * SLOTS_MULT; i++) {
+        multipliers.push({ mult: 5, color: "#00ffa2" });
+      }
+
+      const TABLE = [[], [], []];
+
+      for (let i = 0; i < multipliers.length; i++) {
+        const a = multipliers[i];
+        for (let j = 0; j < multipliers.length; j++) {
+          const b = multipliers[j];
+          TABLE[0].push(a.mult);
+          TABLE[1].push(b.mult);
+          TABLE[2].push(a.mult * b.mult);
+        }
+      }
+
+      function mkCell(txt) {
+        const t = document.createElement("td");
+        t.innerText = txt;
+        return t;
+      }
+      function mkRow(txt) {
+        const t = document.createElement("td");
+        t.innerText = txt;
+        return t;
+      }
+
+      let T1, T2, T3;
+      function rotateRows() {
+        T1 = document.createElement("tr");
+        T1.appendChild(mkCell("S1"));
+        T.appendChild(T1);
+        T2 = document.createElement("tr");
+        T2.appendChild(mkCell("S2"));
+        T.appendChild(T2);
+        T3 = document.createElement("tr");
+        T3.appendChild(mkCell("X"));
+        T3.classList.add("t3");
+        T.appendChild(T3);
+      }
+
+
+      const interval = Math.floor(innerWidth / 23);
+
+      for (let i = 0; i < TABLE[0].length; i++) {
+        if (i % interval === 0) {
+          rotateRows();
+        }
+        T1.appendChild(mkCell(TABLE[0][i]));
+        T2.appendChild(mkCell(TABLE[1][i]));
+        T3.appendChild(mkCell(TABLE[2][i]));
+      }
+    </script>
+  </body>
+</html>
