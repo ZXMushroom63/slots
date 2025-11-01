@@ -242,7 +242,7 @@
             multipliers.push({ mult: 1, color: "#007bff" });
         }
         for (let i = 0; i < (5 * SLOTS_MULT); i++) {
-            multipliers.push({ mult: 2, color: "#ff006f" });
+            multipliers.push({ mult: 2, color: "#ff003f" });
         }
         for (let i = 0; i < (4 * SLOTS_MULT); i++) {
             multipliers.push({ mult: 3, color: "#fc03e8" });
@@ -263,9 +263,10 @@
             inputBox.value = Math.max(1, Math.min(10000, parseInt(inputBox.value))) || 1;
         });
 
-        const SAMPLES = 100; //100000;
+        const SAMPLES = 1000; //100000;
         let experimentalSum = 0;
         for (let i = 0; i < SAMPLES; i++) {
+            const set = [...multipliers];
             let m = 1;
             for (let j = 0; j < slots.length; j++) {
                 m *= multipliers[Math.floor(multipliers.length * Math.random())].mult;
@@ -289,7 +290,7 @@
             // localStorage.getItem("sjfahew") for beginners luck algorithm
             const set = true ? [...multipliers] : [...multipliers.filter(x => (x.mult > 0.9) && (x.mult < 4))]; //
             values.forEach((x, i) => {
-                values[i] = set.splice(Math.floor(set.length * Math.random()), 1)[0];
+                values[i] = set[Math.floor(set.length * Math.random())];
             });
             localStorage.setItem("sjfahew", "a");
             
