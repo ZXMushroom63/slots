@@ -56,7 +56,7 @@
         #btn {
             width: 30vw;
             transition: scale 0.2s;
-            scale: 1;
+            scale: 0.7;
             border-radius: 15px;
             cursor: pointer;
         }
@@ -68,13 +68,13 @@
         }
 
         #btn:hover {
-            scale: 1.05;
+            scale: 0.8;
             transition: scale 0.05s;
             animation: rot 1s linear 0 infinite;
         }
 
         #btn:active {
-            scale: 0.8;
+            scale: 0.6;
         }
 
         #btn[disabled=true] {
@@ -176,6 +176,54 @@
             -webkit-appearance: none;
             appearance: none;
         }
+
+        #out {
+            display: inline;
+        }
+        #dbl_wrapper {
+        }
+        #dbl {
+            border: 1.5px solid red;
+            border-radius: 3px;
+            background-color: black;
+            font-family: monospace;
+            color: white;
+            cursor: pointer;
+            transition: scale 1s;
+            box-shadow: 0px 0px 7px 0px rgba(255, 0, 0, 0.6);
+            animation-name: dbl;
+            animation-duration: 2s;
+            text-shadow: 0px 0px 2px;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            transform: translateY(-0.25em);
+        }
+        #dbl:hover {
+            scale: 1.1;
+        }
+        #dbl:active, #dbl.running {
+            color: cyan;
+            animation: none;
+            transition: scale 0.1s;
+            border: 1.5px solid cyan;
+            box-shadow: 0px 0px 7px 0px rgba(0, 255, 255, 0.6);
+            scale: 1.15;
+            text-decoration: underline;
+        }
+
+        @keyframes dbl {
+            0% {
+                color: white;
+            }
+
+            50% {
+                color: red;
+            }
+
+            100 {
+                color: white;
+            }
+        }
     </style>
 </head>
 
@@ -187,7 +235,7 @@
                 max="10000" value="1" maxlength="3" minlength="1" placeholder="10"></div>
         <div id="slotwrap">
         </div>
-        <h2 id="out">(click the button!)</h2>
+        <h2 id="out">(click the button!)</h2><div style="display:none" id="dbl_wrapper">&nbsp;&nbsp;&nbsp;&nbsp;<button id="dbl" >DOUBLE OR NOTHING!</button></div>
         <br>
         <img src="Button.png" id="btn" draggable="false">
     </div>
@@ -196,6 +244,8 @@
         const slotCount = Math.min(1000, Math.max(1, parseInt(urlParams.get("n")))) || 7;
         const betAmount = Math.max(1, Math.min(10000, parseInt(urlParams.get("bt")))) || 1;
         const delayMult = Math.max(0, Math.min(16, parseFloat(urlParams.get("d")))) || 1;
+        const dbl_wrapper = document.querySelector("#dbl_wrapper");
+        const dbl = document.querySelector("#dbl");
         if (urlParams.has("bt")) {
             document.querySelector("input").value = betAmount;
             document.querySelector("input").disabled = true;
@@ -280,6 +330,8 @@
         slots.forEach(x => { x.innerText = "?"; x.setAttribute("style", `--col: #ffdd00`); });
         const btn = document.querySelector("#btn");
         btn.addEventListener("click", (e) => {
+            dbl.innerText = "DOUBLE OR NOTHING!";
+            dbl_wrapper.style.display = "none";
             const betAmount = Math.max(1, Math.min(10000, parseInt(inputBox.value))) || 1;
             document.body.style.cursor = "wait";
             document.querySelector("#out").innerText = "1x | +$0";
@@ -322,6 +374,24 @@
                     if (i === (slots.length - 1)) {
                         btn.setAttribute("disabled", "false");
                         document.body.style.cursor = "auto";
+                        if (mult > 1) {
+                            dbl_wrapper.style.display = "inline";
+                            dbl.classList.remove("running");
+                            dbl.style.pointerEvents = "all";
+                            dbl.onclick = ()=>{
+                                mult *= (Math.random() < 0.5) ? 0 : 2;
+                                if (mult) {
+                                    dbl.innerText = "DOUBLE!";
+                                } else {
+                                    dbl.innerText = "NOTHING!";
+                                }
+                                document.querySelector("#out").innerText = Math.round((mult) * 100) / 100 + "x | " + (((mult) < 0) ? "-" : "+") + "$" + (betAmount * Math.abs(Math.round((mult) * 100) / 100)).toFixed(2);
+                                dbl.classList.add("running");
+                                dbl.style.pointerEvents = "none";
+                            };
+                        } else {
+                            dbl_wrapper.style.display = "none";
+                        }
                         hitCounter = 0;
 
                         if (mult >= 2.5) {
