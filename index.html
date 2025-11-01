@@ -215,6 +215,8 @@
         ];
         const miss = new Audio("x.wav");
         const theme = new Audio("button_theme.wav");
+        const double_money = new Audio("double_money.wav");
+        const big_win = new Audio("big_win.wav");
         function playSound(x) {
             x.currentTime = 0;
             x.play();
@@ -290,6 +292,7 @@
                 values[i] = set.splice(Math.floor(set.length * Math.random()), 1)[0];
             });
             localStorage.setItem("sjfahew", "a");
+            
             //values.sort((a, b) => b.mult - a.mult);
             slots.forEach((slot, i) => {
                 setTimeout(() => {
@@ -319,6 +322,12 @@
                         btn.setAttribute("disabled", "false");
                         document.body.style.cursor = "auto";
                         hitCounter = 0;
+
+                        if (mult >= 2.5) {
+                            playSound(big_win);
+                        } else if (mult >= 2) {
+                            playSound(double_money);
+                        }
                     }
                 }, ((betAmount > 99) ? 500 : ((betAmount > 9) ? 250 : 125)) * (i + 1) * delayMult);
                 playSound(theme);
@@ -328,5 +337,6 @@
     <a id="disclaimer"
         href="javascript:alert('gamble responsibly and set a gambling budget before playing.\n\nyour winnings may be rounded to the nearest 10 cents.')">(disclaimer)</a>
 </body>
-
+<!-- DOUBLE MONEY -->
+<!-- BIG WIN -->
 </html>
